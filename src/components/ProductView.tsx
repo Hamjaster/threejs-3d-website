@@ -1,18 +1,17 @@
-import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import Macbook14 from "../models/Macbook-14.jsx";
 import Macbook16 from "../models/Macbook-16.jsx";
+import StudioLights from "./StudioLights";
+import { useProduct } from "../context/ProductContext";
 
 const ProductView = () => {
-  const [selectedColor, setSelectedColor] = useState<"silver" | "spaceBlack">(
-    "silver"
-  );
-  const [selectedSize, setSelectedSize] = useState<"14" | "16">("16");
+  const { currentColor, currentModel, setCurrentColor, setCurrentModel } =
+    useProduct();
 
-  // Placeholder 3D component - will be replaced with actual model later
+  // 3D component that switches based on current model
   const LaptopModel = (props: any) => {
-    return selectedSize === "14" ? (
+    return currentModel === "14" ? (
       <Macbook14 {...props} />
     ) : (
       <Macbook16 {...props} />
@@ -34,8 +33,7 @@ const ProductView = () => {
             camera={{ position: [0, 0, 15], fov: 50 }}
             className="w-full h-full"
           >
-            <ambientLight intensity={1} />
-            <directionalLight position={[10, 10, 10]} intensity={1} />
+            <StudioLights/>
             <OrbitControls
               enableZoom={false}
               enablePan={false}
@@ -45,7 +43,10 @@ const ProductView = () => {
               maxPolarAngle={Math.PI / 2.2}
             />
             <PerspectiveCamera makeDefault position={[0, 0, 45]} />
-            <LaptopModel position={[0, -10, 0]} />
+            <LaptopModel
+              scale={currentModel == "14" ? 0.6 : 0.8}
+              position={[0, -10, 0]}
+            />
           </Canvas>
         </div>
 
@@ -54,19 +55,19 @@ const ProductView = () => {
           {/* Product Title */}
           <div className="text-center">
             <h2 className="text-xl md:text-2xl lg:text-3xl font-light tracking-tight">
-              MacBook Pro {selectedSize}"
+              MacBook Pro {currentModel}"
             </h2>
             <p className="text-sm md:text-base text-gray-400 mt-2">
-              in {selectedColor === "silver" ? "Silver" : "Space Black"}
+              in {currentColor === "silver" ? "Silver" : "Space Black"}
             </p>
           </div>
 
           {/* Color Options */}
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setSelectedColor("silver")}
+              onClick={() => setCurrentColor("silver")}
               className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 transition-all ${
-                selectedColor === "silver"
+                currentColor === "silver"
                   ? "border-white scale-110"
                   : "border-gray-600 hover:border-gray-400"
               }`}
@@ -75,9 +76,9 @@ const ProductView = () => {
               <div className="w-full h-full rounded-full bg-gray-300" />
             </button>
             <button
-              onClick={() => setSelectedColor("spaceBlack")}
+              onClick={() => setCurrentColor("spaceBlack")}
               className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 transition-all ${
-                selectedColor === "spaceBlack"
+                currentColor === "spaceBlack"
                   ? "border-white scale-110"
                   : "border-gray-600 hover:border-gray-400"
               }`}
@@ -90,9 +91,9 @@ const ProductView = () => {
           {/* Size Options */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setSelectedSize("14")}
+              onClick={() => setCurrentModel("14")}
               className={`px-6 py-2 md:px-8 md:py-3 text-sm md:text-base font-light border transition-all ${
-                selectedSize === "14"
+                currentModel === "14"
                   ? "border-white bg-white/10"
                   : "border-gray-600 hover:border-gray-400"
               }`}
@@ -100,9 +101,9 @@ const ProductView = () => {
               14"
             </button>
             <button
-              onClick={() => setSelectedSize("16")}
+              onClick={() => setCurrentModel("16")}
               className={`px-6 py-2 md:px-8 md:py-3 text-sm md:text-base font-light border transition-all ${
-                selectedSize === "16"
+                currentModel === "16"
                   ? "border-white bg-white/10"
                   : "border-gray-600 hover:border-gray-400"
               }`}

@@ -7,10 +7,11 @@ import {
   ScrollControls,
 } from "@react-three/drei";
 import AppleWebsite from "./pages/AppleWebsite";
+import { ProductProvider } from "./context/ProductContext";
 
 function App() {
   return (
-    <>
+    <ProductProvider>
       <div className="h-screen w-screen">
         <Canvas className="h-full w-full">
           <OrbitControls enableZoom={false} />
@@ -23,8 +24,8 @@ function App() {
         </Canvas>
       </div>
       {/* Apple Website starts now */}
-      {/* <AppleWebsite /> */}
-    </>
+      <AppleWebsite />
+    </ProductProvider>
   );
 }
 
