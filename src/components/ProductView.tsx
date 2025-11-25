@@ -4,17 +4,48 @@ import Macbook14 from "../models/Macbook-14.jsx";
 import Macbook16 from "../models/Macbook-16.jsx";
 import StudioLights from "./StudioLights";
 import { useProduct } from "../context/ProductContext";
+import ModelSwitcher from "./ModeSwitcher";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useRef } from "react";
+
+const ANIMATION_DURATION = 1;
+const OFFSET_DISTANCE = 5;
+
+const fadeMeshes = (group, opacity) => {
+  if (!group) return;
+
+  group.traverse((child) => {
+    if (child.isMesh) {
+      child.material.transparent = true;
+      gsap.to(child.material, { opacity, duration: ANIMATION_DURATION });
+    }
+  });
+};
+
+const moveGroup = (group, x) => {
+  if (!group) return;
+
+  gsap.to(group.position, { x, duration: ANIMATION_DURATION });
+};
 
 const ProductView = () => {
   const { currentColor, currentModel, setCurrentColor, setCurrentModel } =
     useProduct();
 
+  const smallMacbookRef = useRef();
+  const largeMacbookRef = useRef();
+
   // 3D component that switches based on current model
   const LaptopModel = (props: any) => {
     return currentModel === "14" ? (
-      <Macbook14 {...props} />
+      <group>
+        <Macbook14 ref={smallMacbookRef} {...props} />
+      </group>
     ) : (
-      <Macbook16 {...props} />
+      <group>
+        <Macbook16 ref={largeMacbookRef} {...props} />
+      </group>
     );
   };
 
@@ -33,7 +64,7 @@ const ProductView = () => {
             camera={{ position: [0, 0, 15], fov: 50 }}
             className="w-full h-full"
           >
-            <StudioLights/>
+            <StudioLights />
             <OrbitControls
               enableZoom={false}
               enablePan={false}
@@ -47,6 +78,10 @@ const ProductView = () => {
               scale={currentModel == "14" ? 0.6 : 0.8}
               position={[0, -10, 0]}
             />
+            {/* <ModelSwitcher
+              scale={currentModel == "14" ? 0.08 : 0.05}
+              isMobile={false}
+            /> */}
           </Canvas>
         </div>
 

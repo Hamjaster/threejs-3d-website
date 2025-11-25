@@ -8,7 +8,7 @@ Title: macbook pro M3 16 inch 2024
 */
 import { noChangeParts } from "../constant";
 import React, { useEffect } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { useProduct } from "../context/ProductContext";
 
 export default function Macbook14(props) {
@@ -17,12 +17,16 @@ export default function Macbook14(props) {
 
   // Update material color based on selected color
   useEffect(() => {
-  scene.children.forEach(child => {
-    if (!noChangeParts.includes(child.name)) {
-      child.material.color.set(currentColor === "silver" ? "#c0c0c0" : "#1a1a1a");
-    }
-  });
+    scene.children.forEach((child) => {
+      if (!noChangeParts.includes(child.name)) {
+        child.material.color.set(
+          currentColor === "silver" ? "#c0c0c0" : "#1a1a1a"
+        );
+      }
+    });
   }, [currentColor]);
+
+  const texture = useTexture("/screen.png");
 
   return (
     <group {...props} dispose={null}>
@@ -115,7 +119,7 @@ export default function Macbook14(props) {
         geometry={nodes.Object_123.geometry}
         material={materials.sfCQkHOWyrsLmor}
         rotation={[Math.PI / 2, 0, 0]}
-      />
+      ></mesh>
       <mesh
         geometry={nodes.Object_127.geometry}
         material={materials.ZCDwChwkbBfITSW}

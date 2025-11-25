@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 // Define the types for the context
 export type ProductColor = "silver" | "spaceBlack";
@@ -9,6 +15,9 @@ interface ProductContextType {
   currentColor: ProductColor;
   setCurrentModel: (model: ProductModel) => void;
   setCurrentColor: (color: ProductColor) => void;
+  texture: string;
+  reset: () => void;
+  setTexture: (texture: string) => void;
 }
 
 // Create the context
@@ -21,16 +30,23 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   const [currentModel, setCurrentModel] = useState<ProductModel>("16");
   const [currentColor, setCurrentColor] = useState<ProductColor>("silver");
 
-
   useEffect(() => {
-    console.log(currentColor, 'current color')
-  }, [currentColor, currentModel])
+    console.log(currentColor, "current color");
+  }, [currentColor, currentModel]);
 
+  const [texture, setTexture] = useState("/videos/feature-1.mp4");
+
+  const reset = () => {
+    setTexture("/videos/feature-1.mp4");
+  };
   const value: ProductContextType = {
     currentModel,
     currentColor,
     setCurrentModel,
     setCurrentColor,
+    texture,
+    reset,
+    setTexture,
   };
 
   return (
@@ -46,4 +62,3 @@ export const useProduct = (): ProductContextType => {
   }
   return context;
 };
-
